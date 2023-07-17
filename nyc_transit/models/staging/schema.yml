@@ -1,0 +1,540 @@
+models:
+  - name: stg__central_park_weather
+    description: ""
+    columns:
+      - name: station
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: name
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: date
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DATE
+
+      - name: awnd
+        description: ""
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: prcp
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: snow
+        description: ""
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: snwd
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: tmax
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: INTEGER
+
+      - name: tmin
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: INTEGER
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__bike_data
+    description: ""
+    columns:
+      - name: started_at_ts
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: ended_at_ts
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: tripduration
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: BIGINT
+
+      - name: start_station_id
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: start_station_name
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: start_lat
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: start_lng
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: end_station_id
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: end_station_name
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: end_lat
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: end_lng
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__daily_citi_bike_trip_counts_and_weather
+    description: ""
+    columns:
+      - name: date
+        description: ""
+
+      - name: trips
+        description: ""
+
+      - name: precipitation
+        description: ""
+
+      - name: snow_depth
+        description: ""
+
+      - name: snowfall
+        description: ""
+
+      - name: max_temperature
+        description: ""
+
+      - name: min_temperature
+        description: ""
+
+      - name: average_wind_speed
+        description: ""
+
+      - name: dow
+        description: ""
+
+      - name: year
+        description: ""
+
+      - name: month
+        description: ""
+
+      - name: holiday
+        description: ""
+
+      - name: stations_in_service
+        description: ""
+
+      - name: weekday
+        description: ""
+
+      - name: weekday_non_holiday
+        description: ""
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__fhv_bases
+    description: ""
+    columns:
+      - name: base_number
+        description: ""
+        tests:
+         - not_null
+
+      - name: base_name
+        description: ""
+        tests:
+         - not_null
+
+      - name: dba
+        description: ""
+
+      - name: dba_category
+        description: ""
+        tests:
+         - not_null
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__fhv_tripdata
+    description: ""
+    columns:
+      - name: dispatching_base_num
+        description: ""
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              to: source('main', 'fhv_bases')
+              field: base_number
+              config:
+                    severity: warn
+      - name: pickup_datetime
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: dropoff_datetime
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: pulocationid
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: dolocationid
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: DOUBLE
+
+      - name: affiliated_base_number
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__fhvhv_tripdata
+    description: ""
+    columns:
+      - name: hvfhs_license_num
+        description: ""
+        tests:
+         - not_null
+
+      - name: dispatching_base_num
+        description: ""
+        tests:
+         - not_null
+
+      - name: originating_base_num
+        description: ""
+
+      - name: request_datetime
+        description: ""
+        tests:
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: on_scene_datetime
+        description: ""
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: pickup_datetime
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: dropoff_datetime
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: TIMESTAMP
+
+      - name: pulocationid
+        description: ""
+        tests:
+         - not_null
+
+      - name: dolocationid
+        description: ""
+        tests:
+         - not_null
+
+      - name: trip_miles
+        description: ""
+        tests:
+         - not_null
+         - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 1500
+
+      - name: trip_time
+        description: ""
+        tests:
+         - not_null
+
+      - name: base_passenger_fare
+        description: ""
+        tests:
+         - not_null
+
+      - name: tolls
+        description: ""
+        tests:
+         - not_null
+
+      - name: bcf
+        description: ""
+        tests:
+         - not_null
+
+      - name: sales_tax
+        description: ""
+        tests:
+         - not_null
+
+      - name: congestion_surcharge
+        description: ""
+        tests:
+         - not_null
+
+      - name: airport_fee
+        description: ""
+
+      - name: tips
+        description: ""
+        tests:
+         - not_null
+
+      - name: driver_pay
+        description: ""
+        tests:
+         - not_null
+
+      - name: shared_request_flag
+        description: ""
+        tests:
+         - not_null
+
+      - name: shared_match_flag
+        description: ""
+
+      - name: access_a_ride_flag
+        description: ""
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: bool
+              config:
+                    severity: warn
+
+      - name: wav_request_flag
+        description: ""
+
+      - name: wav_match_flag
+        description: ""
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__green_tripdata
+    description: ""
+    columns:
+      - name: vendorid
+        description: ""
+
+      - name: lpep_pickup_datetime
+        description: ""
+
+      - name: lpep_dropoff_datetime
+        description: ""
+
+      - name: store_and_fwd_flag
+        description: ""
+
+      - name: ratecodeid
+        description: ""
+
+      - name: pulocationid
+        description: ""
+
+      - name: dolocationid
+        description: ""
+
+      - name: passenger_count
+        description: ""
+
+      - name: trip_distance
+        description: ""
+
+      - name: fare_amount
+        description: ""
+
+      - name: extra
+        description: ""
+
+      - name: mta_tax
+        description: ""
+
+      - name: tip_amount
+        description: ""
+
+      - name: tolls_amount
+        description: ""
+
+      - name: ehail_fee
+        description: ""
+
+      - name: improvement_surcharge
+        description: ""
+
+      - name: total_amount
+        description: ""
+
+      - name: payment_type
+        description: ""
+
+      - name: trip_type
+        description: ""
+
+      - name: congestion_surcharge
+        description: ""
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
+
+  - name: stg__yellow_tripdata
+    description: ""
+    columns:
+      - name: vendorid
+        description: ""
+
+      - name: tpep_pickup_datetime
+        description: ""
+
+      - name: tpep_dropoff_datetime
+        description: ""
+
+      - name: passenger_count
+        description: ""
+
+      - name: trip_distance
+        description: ""
+
+      - name: ratecodeid
+        description: ""
+
+      - name: store_and_fwd_flag
+        description: ""
+
+      - name: pulocationid
+        description: ""
+
+      - name: dolocationid
+        description: ""
+
+      - name: payment_type
+        description: ""
+
+      - name: fare_amount
+        description: ""
+
+      - name: extra
+        description: ""
+
+      - name: mta_tax
+        description: ""
+
+      - name: tip_amount
+        description: ""
+
+      - name: tolls_amount
+        description: ""
+
+      - name: improvement_surcharge
+        description: ""
+
+      - name: total_amount
+        description: ""
+
+      - name: congestion_surcharge
+        description: ""
+
+      - name: airport_fee
+        description: ""
+
+      - name: filename
+        description: ""
+        tests:
+         - not_null
