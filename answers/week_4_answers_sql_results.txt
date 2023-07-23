@@ -1,0 +1,57 @@
+D .read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/bike_trips_and_duration_by_weekday.sql
+.read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/bike_trips_and_duration_by_weekday.sql
+--count and total time of bike trips by weekday
+select
+    weekday(started_at_ts) as weekday,
+    count(*) as total_trips,
+    sum(duration_min) as total_trip_duration_min,
+    sum(duration_sec) as total_trip_duration_sec
+from "main"."main"."mart__fact_all_bike_trips"
+group by all
+100% ▕████████████████████████████████████████████████████████████▏
+┌─────────┬─────────────┬─────────────────────────┬─────────────────────────┐
+│ weekday │ total_trips │ total_trip_duration_min │ total_trip_duration_sec │
+│  int64  │    int64    │         int128          │         int128          │
+├─────────┼─────────────┼─────────────────────────┼─────────────────────────┤
+│       0 │     6394986 │               149219535 │              8953087887 │
+│       1 │     6238393 │               118391566 │              7103460966 │
+│       2 │     6828035 │               125745622 │              7544669274 │
+│       3 │     6971584 │               127950450 │              7677072018 │
+│       4 │     6733338 │               125174106 │              7510389063 │
+│       5 │     6798425 │               132563942 │              7953642067 │
+│       6 │     7203547 │               170438868 │             10226279354 │
+└─────────┴─────────────┴─────────────────────────┴─────────────────────────┘
+D read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/inter_borough_taxi_trips_by_weekday.sql
+.read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/inter_borough_taxi_trips_by_weekday.sql
+--count of total trips, trips that start and end in different borough and percentage with different start and end points, by weekday
+
+
+select count(*) as total_trips, sum(trips_start_end_diff_borough_flag) as count_trips_start_end_diff_borough, sum(trips_start_end_diff_borough_flag)/count(*) percentage_trips_start_end_diff_borough
+from (
+select a.*, case when start_loc.Borough <> end_loc.Borough then 1 else 0 end as trips_start_end_diff_borough_flag
+from "main"."main"."mart__fact_all_taxi_trips" a
+    left join "main"."main"."mart__dim_locations" start_loc on a.PUlocationID = start_loc.LocationID
+    left join "main"."main"."mart__dim_locations" end_loc on a.DOlocationID = end_loc.LocationID) x
+group by all
+100% ▕████████████████████████████████████████████████████████████▏
+┌─────────────┬────────────────────────────────────┬─────────────────────────────────────────┐
+│ total_trips │ count_trips_start_end_diff_borough │ percentage_trips_start_end_diff_borough │
+│    int64    │               int128               │                 double                  │
+├─────────────┼────────────────────────────────────┼─────────────────────────────────────────┤
+│   406013584 │                          101134473 │                     0.24909135306172417 │
+└─────────────┴────────────────────────────────────┴─────────────────────────────────────────┘
+D .read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/taxi_trips_ending_at_airport.sql
+.read /home/hdoerr/nyc_transit/target/compiled/nyc_transit/analyses/taxi_trips_ending_at_airport.sql
+--total number of trips ending in service zones 'Airport' and 'EWR'
+
+select count(*) as total_trips_ending_at_airport
+from "main"."main"."mart__fact_all_taxi_trips" a
+    inner join "main"."main"."mart__dim_locations" b on a.DOlocationID = b.LocationID
+        and service_zone in ('EWR', 'Airports')
+┌───────────────────────────────┐
+│ total_trips_ending_at_airport │
+│             int64             │
+├───────────────────────────────┤
+│                      10624474 │
+└───────────────────────────────┘
+D
