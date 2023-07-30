@@ -6,4 +6,4 @@
     when {{column_name}} is null then null
     else {{column_name}}
 end)::bool
-{%- endmacro %}
+{%- endmacro %} 
